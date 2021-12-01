@@ -53,7 +53,7 @@ pub fn set_store_benchmark(n:usize, m:usize) {
     for _ in 0..m {
         let mut s = Vec::new();
         for i in 0..n {
-            if rng.gen_range(0..100) <= 10 {
+            if rng.gen_range(0..100) <= 5 {
                 s.push(i);
             }
         }
