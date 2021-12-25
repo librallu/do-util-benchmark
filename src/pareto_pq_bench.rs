@@ -33,7 +33,7 @@ pub fn random_element<const NB_DIM:usize>(rng:&mut ThreadRng) -> CartesianPareto
 
 pub fn perform_bench<'a, T, Elt:ParetoElement<T>, Front>
 (elements:&[Elt], mut front:Front) where
-T:Ord,
+T:Ord+std::fmt::Debug,
 Elt:'a + ParetoElement<T>+Eq+Clone,
 Front:ParetoFront<T, Elt> {
     // inserts elements
@@ -47,10 +47,22 @@ Front:ParetoFront<T, Elt> {
     );
     // pop them until no more elements in the front
     let mut nb_pops:usize = 0;
+    let mut dim:usize = 1;
     let start_pop = Instant::now();
-    while front.pop_minimum_element(0).is_some() {
+    let mut last = front.peek_minimum_coordinate(dim).unwrap();
+    let mut dim_vec = Vec::new();
+    while let Some(e) = front.pop_minimum_element(dim) {
         nb_pops += 1;
+        if last > e.kth(dim) {
+            println!("error");
+        }
+        last = e.kth(dim);
+        dim_vec.push(e.kth(dim));
+        // println!("{:?}", e.kth(dim));
+        // println!("{:?}", front.peek_minimum_coordinate(dim));
     }
+    dim_vec.sort();
+    println!("{:?}", dim_vec);
     let time_pop = start_pop.elapsed().as_secs_f32();
     println!("\t{:<5} pops in {} seconds ({} pops/s)", nb_pops, time_pop, nb_pops as f32/time_pop);
 }
@@ -74,5 +86,5 @@ pub fn bench_pareto<const NB_DIM:usize>(nb_elts:usize) {
 
 
 pub fn pareto_pq_bench() {
-    bench_pareto::<3>(2000000);
+    bench_pareto::<3>(100);
 }
