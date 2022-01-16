@@ -9,7 +9,7 @@ use do_util::priority_queue::{
     GuidedElement,
     util::CartesianParetoElement
 };
-use do_util::priority_queue::pareto_pq_list::ListParetoFront;
+use do_util::priority_queue::pareto_list::ListParetoFront;
 // use do_util::pareto_pq::naive_kd_tree::NaiveKDTreeFront;
 // use do_util::pareto_pq::kd_tree::KDTreeFront;
 
@@ -50,8 +50,8 @@ Front:PriorityQueue<T, Elt> {
     // pop them until no more elements in the front
     let mut nb_pops:usize = 0;
     let start_pop = Instant::now();
-    let mut last = front.peek_minimum().unwrap().guide();
-    while let Some(e) = front.pop_minimum() {
+    let mut last = front.peek_min().unwrap().guide();
+    while let Some(e) = front.pop_min() {
         nb_pops += 1;
         if last > e.guide() {
             panic!("error: priority queue did not extract a minimum element.");
